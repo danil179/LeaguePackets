@@ -69,20 +69,23 @@ namespace LeaguePackets.GamePackets
             writer.WriteVector3(Position);
             writer.WriteInt32(SkinID);
             writer.WriteNetID(CloneNetID);
-            ushort bitfield = 0;
-            bitfield |= (ushort)((ushort)TeamID & 0x01FF);
+            ushort team = 0;
+            team |= (ushort)((ushort)TeamID & 0x01FF);
+            writer.WriteUInt16(team);
+
+            byte bitfield = 0;
             if (IgnoreCollision)
-                bitfield |= 0x0200;
+                bitfield |= 0x01;
             if (IsWard)
-                bitfield |= 0x0400;
+                bitfield |= 0x02;
             if (IsLaneMinion)
-                bitfield |= 0x0800;
+                bitfield |= 0x04;
             if (IsBot)
-                bitfield |= 0x1000;
+                bitfield |= 0x08;
             if (IsTargetable)
-                bitfield |= 0x2000;
+                bitfield |= 0x10;
                     
-            writer.WriteUInt16(bitfield);
+            writer.WriteByte(bitfield);
             writer.WriteSpellFlags(IsTargetableToTeam);
             writer.WriteFloat(VisibilitySize);
             writer.WriteFixedString(Name, 64);
